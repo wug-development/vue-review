@@ -5,10 +5,13 @@ class Dep {
 
     add (obj) {
         this._lister.push(obj)
+        console.log(this._lister)
     }
 
     notify () {
+        console.log(this._lister)
         this._lister.forEach(item => {
+            console.log('notify')
             item.update && item.update()
         })
     }
@@ -19,7 +22,7 @@ class Watcher {
         this.update = options.update
         Dep.target = this
         console.log('Watcher start',options.allVal[options.key])
-        let m = options.allVal[options.key]
+        let m = eval('options.allVal.' + options.key)
         console.log('Watcher end')
         Dep.target = null
     }
@@ -42,6 +45,7 @@ class Vue {
                     return this.$data[item]
                 },
                 set: function (v) {
+                    console.log('observerRoot-set')
                     this.$data[item] = v
                 }
             })
@@ -53,12 +57,14 @@ class Vue {
         Object.keys(obj).forEach(item => {
             let val = obj[item]
             if (typeof val === 'object') {
+                console.log('this.observerData(val)')
                 this.observerData(val)
             } else {
                 let dep = new Dep()
+                console.log(item)
                 Object.defineProperty(obj, item, {
                     get: function () {
-                        console.log('get')
+                        console.log('get:' + item)
                         Dep.target && dep.add(Dep.target)
                         return val
                     },
@@ -125,14 +131,13 @@ class Vue {
                 switch(item.name) {
                     case 'v-model': 
                         node.oninput = (v) => {
-                            _this[item.value] = node.value || ''
+                            eval('_this.' + item.value + '=node.value || ""')
                         }
-                        node.value = data[item.value]
+                        node.value = eval('data.' + item.value) // data[item.value]
                     ; break;
-                    case 'v-html': node.innerHTML = data[item.value]; break;
+                    case 'v-html': node.innerHTML = eval('data.' + item.value); break;
                     default: break;
                 }
-                console.log(item.name, node, data[item.value])
             }
             update()
 
@@ -156,13 +161,17 @@ var app = new Vue({
     el: '#app',
     data () {
         return {
-            name: 'wg'
+            name: 'wg',
+            h: {
+                a: 1
+            }
         }
     },
     method: {
         changeName (v) {
-            console.log(123)
-            this.name = '儿时的路'
+            let f = parseInt(Math.random() * 100)
+            this.name = '儿时的路' + f
+            this.h.a = f
         }
     }
 })
