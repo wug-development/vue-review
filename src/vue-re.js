@@ -56,12 +56,10 @@ class Vue {
         if (typeof obj !== 'object') return false
         Object.keys(obj).forEach(item => {
             let val = obj[item]
-            if (typeof val === 'object') {
-                console.log('this.observerData(val)')
-                this.observerData(val)
-            } else {
+            // if (typeof val === 'object') {
+            //     this.observerData(val)
+            // } else {
                 let dep = new Dep()
-                console.log(item)
                 Object.defineProperty(obj, item, {
                     get: function () {
                         console.log('get:' + item)
@@ -74,7 +72,7 @@ class Vue {
                         dep.notify()
                     }
                 })
-            }
+            // }
         })
     }
 
@@ -151,7 +149,7 @@ class Vue {
             switch(item.name) {
                 case '@click': node.addEventListener('click', () => {
                     _this.$options.method[item.value].call(this)
-                })
+                }); break;
             }
         })
     }

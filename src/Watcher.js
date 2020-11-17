@@ -6,3 +6,4 @@ class Watcher {
         // Dep.target = null
     }
 }
+export default Watcher
