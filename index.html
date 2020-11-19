@@ -37,6 +37,7 @@
         </div>
 
         <script src="./src/vue-re-re.js"></script>
+        <script src="./src/axios.js"></script>
         <script>            
             let app = new Vue({
                 el: '#app',
@@ -52,5 +53,15 @@
                 }
             })
         </script>
+        <script>
+            let axios = new Axios()
+            axios.create({dataType: 'text/json'})
+            axios.get('https://www.roseonly.com.cn/pages/Product/productInGroups.htm', {id: 5080}).then(res => {
+                console.log(res)
+            })
+        </script> 
+        <!-- <script src="./src/ProxyCopy.js"></script>
+        <script src="./src/ProxyDeep.js"></script>-->
+
     </body>
 </html>
